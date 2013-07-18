@@ -48,7 +48,7 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManagerFactory;
 import parse.RawRequestLine;
 
-public class OntopadSimple {
+public class Main {
 
     public static byte[] html;
     private static Charset headerCharset;
