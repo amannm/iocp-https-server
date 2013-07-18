@@ -1,7 +1,11 @@
 SAHC4J
 ======
 
-Secure Asynchronous HTTPS Connector using Java NIO.2 
+The goals of this project was to create a HTTPS Parser and Connector that:
+ -  Secure -> Low level SSL integration using JSSE
+ -  Scalable -> Java 7's NIO.2 Asynchronous Sockets API (Interface to Native IOCP)
+ -  Fast -> Native memory operations via NIO ByteBuffer 
 
-"v2" Object Oriented implementation that focuses on parsing the HTTP protocol
-"Mini" highly coupled version made in order to explore the simplest/most elegant implementation
+"v1/v2" Object Oriented implementation that focuses on modularity and parsing the HTTP protocol
+
+"Mini" simplified version attempting a simpler but less object-oriented implementation
