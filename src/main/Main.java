@@ -66,9 +66,9 @@ public class Main {
         KeyStore ksKeys = KeyStore.getInstance("JKS");
         ksKeys.load(new FileInputStream(keyStorePath), keyString1.toCharArray());
 
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(ksKeys, keyString2.toCharArray());
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(ksKeys);
 
         sslContext = SSLContext.getInstance("TLS");
@@ -85,7 +85,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String keyStorePath = "C:/clientkeystore.jks";
+            String keyStorePath = "C:/keystore.jks";
             String key1 = "helloworld";
             String key2 = "helloworld";
             start(keyStorePath, key1, key2);
@@ -125,67 +125,45 @@ public class Main {
         }
 
         public boolean doHandshake(AsynchronousSocketChannel channel, final SSLEngine engine, final ByteBuffer net, final ByteBuffer app) throws InterruptedException, ExecutionException, TimeoutException, SSLException {
-
-            System.err.println("Starting handshake");
+            System.out.println("Starting handshake");
             engine.beginHandshake();
-            Future<Integer> futureClientHello = channel.read(net);//.get(3, TimeUnit.SECONDS);
-            if (futureClientHello.get(3, TimeUnit.SECONDS) > 0) {
-
-                do {
-                    net.flip();
-                    SSLEngineResult result = engine.unwrap(net, app);
-                    if (result.getStatus() != Status.OK) {
-                        return false;
-                    }
-                    while (result.getHandshakeStatus() == HandshakeStatus.NEED_TASK) {
-                        engine.getDelegatedTask().run();
-                    }
-                    net.compact();
-                } while (engine.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP);
-                net.clear();
-                do {
-                    app.flip();
-                    SSLEngineResult result = engine.unwrap(app, net);
-                    if (result.getStatus() != Status.OK) {
-                        return false;
-                    }
-                    while (result.getHandshakeStatus() == HandshakeStatus.NEED_TASK) {
-                        engine.getDelegatedTask().run();
-                    }
-                    app.compact();
-                } while (engine.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP);
-
-            }
-
+            channel.read(net).get(3, TimeUnit.SECONDS);
             while (true) {
                 switch (engine.getHandshakeStatus()) {
                     case NEED_UNWRAP:
-                        System.err.println("NEED UNWRAP");
+                        System.out.println("NEED UNWRAP");
                         do {
+                            net.flip();
+                            SSLEngineResult result = engine.unwrap(net, app);
+                            if (result.getStatus() != Status.OK) {
+                                System.out.println("Unwrapping issue: " + result.getStatus());
+                                return false;
+                            }
                             while (engine.getHandshakeStatus() == HandshakeStatus.NEED_TASK) {
-                                System.err.println("Run Task");
+                                System.out.println("Run Task");
                                 Runnable task = engine.getDelegatedTask();
                                 if (task != null) {
                                     task.run();
                                 }
                             }
+                            net.compact();
                         } while (engine.getHandshakeStatus() == HandshakeStatus.NEED_UNWRAP);
 
                         break;
                     case NEED_WRAP:
-                        System.err.println("NEED WRAP");
+                        System.out.println("NEED WRAP");
                         net.clear();
                         do {
                             app.flip();
                             SSLEngineResult result = engine.wrap(app, net);
                             if (result.getStatus() != Status.OK) {
-                                System.err.println("Wrapping issue: " + result.getStatus());
+                                System.out.println("Wrapping issue: " + result.getStatus());
                                 return false;
                             }
                             app.compact();
                             System.err.println("Produced: " + result.bytesProduced());
                             while (engine.getHandshakeStatus() == HandshakeStatus.NEED_TASK) {
-                                System.err.println("NEED TASK");
+                                System.out.println("NEED TASK");
                                 Runnable task = engine.getDelegatedTask();
                                 if (task != null) {
                                     task.run();
@@ -193,23 +171,23 @@ public class Main {
                             }
                         } while (engine.getHandshakeStatus() == HandshakeStatus.NEED_WRAP);
 
-                        System.err.println("Sending Bytes");
+                        System.out.println("Sending Bytes");
                         net.flip();
                         channel.write(net).get(3, TimeUnit.SECONDS);
                         net.compact();
                         break;
                     case NEED_TASK:
-                        System.err.println("NEED TASK");
+                        System.out.println("NEED TASK");
                         Runnable task = engine.getDelegatedTask();
                         if (task != null) {
                             task.run();
                         }
                         break;
                     case FINISHED:
-                        System.err.println("FINISHED");
+                        System.out.println("FINISHED");
                         return true;
                     case NOT_HANDSHAKING:
-                        System.err.println("NOT HANDSHAKING");
+                        System.out.println("NOT HANDSHAKING");
                         return true;
                 }
             }
