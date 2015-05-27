@@ -4,8 +4,9 @@
  */
 package v1.http.header;
 
-import java.nio.ByteBuffer;
 import v1.http.util.constants.ASCII;
+
+import java.nio.ByteBuffer;
 
 /**
  *

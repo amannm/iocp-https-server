@@ -4,11 +4,12 @@
  */
 package v1.http.state;
 
+import v1.http.util.constants.HttpProtocol;
+import v1.http.util.constants.HttpRequestMethod;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import v1.http.util.constants.HttpProtocol;
-import v1.http.util.constants.HttpRequestMethod;
 
 /**
  *

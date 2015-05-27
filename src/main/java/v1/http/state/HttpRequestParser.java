@@ -4,6 +4,13 @@
  */
 package v1.http.state;
 
+import v1.http.header.CacheControlWriter;
+import v1.http.header.HttpHeaderWriter;
+import v1.http.header.HttpResponseWriter;
+import v1.http.util.constants.ASCII;
+import v1.http.util.constants.HttpProtocol;
+import v1.http.util.constants.HttpRequestMethod;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -11,22 +18,8 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-
-import v1.http.header.HttpHeaderWriter;
-import v1.http.header.HttpResponseWriter;
-import v1.http.util.constants.ASCII;
-import v1.http.util.constants.CacheControl;
-import v1.http.header.CacheControlWriter;
-import v1.http.util.constants.HttpRequestHeader;
-import v1.http.util.constants.HttpProtocol;
-import v1.http.util.constants.HttpRequestMethod;
-import v1.http.util.constants.OntopadConstants;
 
 /**
  *

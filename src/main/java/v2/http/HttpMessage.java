@@ -7,8 +7,9 @@ package v2.http;
 import v2.cache.CacheDirective;
 import v2.connection.Connection;
 import v2.content.ExtensionAdapter;
-import java.util.Date;
 import v2.parse.HttpProtocol;
+
+import java.util.Date;
 
 /**
  *

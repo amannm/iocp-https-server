@@ -5,17 +5,12 @@
 package v2.http;
 
 import v2.connection.Cookie;
-import v2.content.ByteRange;
-import v2.content.Encoding;
-import v2.content.ExtensionAdapter;
-import v2.content.LanguageTag;
-import v2.content.MediaType;
-import v2.content.QualityAdapter;
-import v2.content.TE;
+import v2.content.*;
+import v2.parse.HttpProtocol;
+
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
-import v2.parse.HttpProtocol;
 
 /**
  *

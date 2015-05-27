@@ -4,18 +4,18 @@
  */
 package v1.connection;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.CompletionHandler;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
+import v1.http.util.constants.SSLConstants;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 import javax.net.ssl.SSLEngineResult.Status;
 import javax.net.ssl.SSLException;
-
-import v1.http.util.constants.SSLConstants;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.CompletionHandler;
+import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 public class SSLChannel implements ProtocolChannel {
 

@@ -4,13 +4,14 @@
  */
 package v1.http.header;
 
+import v1.http.util.constants.HttpContentCoding;
+import v1.http.util.constants.HttpRequestMethod;
+
+import javax.activation.MimeType;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Locale;
-import javax.activation.MimeType;
-import v1.http.util.constants.HttpContentCoding;
-import v1.http.util.constants.HttpRequestMethod;
 
 /**
  *

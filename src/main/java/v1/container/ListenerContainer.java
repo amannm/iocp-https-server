@@ -4,6 +4,8 @@
  */
 package v1.container;
 
+import v1.http.state.HttpRequestParser;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -16,8 +18,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
 //import ontoserv.connection.HTTPChannel;
-import v1.http.state.HttpRequestParser;
 
 /**
  *
