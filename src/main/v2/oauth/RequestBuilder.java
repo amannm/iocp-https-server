@@ -7,7 +7,7 @@ package v2.oauth;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-import HttpRequestHeader;
+import v2.http.HttpRequestHeaderField;
 import v2.parse.ASCII;
 
 
@@ -39,11 +39,11 @@ public class RequestBuilder {
 
     public RequestBuilder(byte[] method, byte[] host, byte[] path) {
         this.source.put(method).put(ASCII.SP).put(path).put(ASCII.SP).put(protocol).put(ASCII.CRLF);
-        this.source.put(HttpRequestHeader.host).put(host).put(ASCII.CRLF);
+        //this.source.put(HttpRequestHeader.host).put(host).put(ASCII.CRLF);
     }
     
     public void putBasicAuthorization() {
-        source.put(HttpRequestHeader.authorization).put(basicAuthorization).put(basicAuthorizationToken).put(v2.parse.ASCII.CRLF);
+        //source.put(HttpRequestHeader.authorization).put(basicAuthorization).put(basicAuthorizationToken).put(v2.parse.ASCII.CRLF);
         
     }
 }
