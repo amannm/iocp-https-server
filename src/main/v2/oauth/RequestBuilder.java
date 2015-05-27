@@ -7,8 +7,7 @@ package v2.oauth;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-import mini.HttpRequestHeader;
-import v2.http.HttpHeader;
+import HttpRequestHeader;
 import v2.parse.ASCII;
 
 
