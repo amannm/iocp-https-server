@@ -1,8 +1,7 @@
-/*
+package v2.parse;/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package v2.parse;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
