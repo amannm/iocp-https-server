@@ -1,3 +1,5 @@
+import http.util.HttpRequestHeader;
+import http.util.ResponseBuilder;
 import v2.parse.RawRequestLine;
 
 import javax.net.ssl.*;
@@ -107,7 +109,7 @@ public class HttpsServer implements Runnable {
                             do {
                                 SSLEngineResult result = engine.unwrap(net, app);
                                 if (result.getStatus() != SSLEngineResult.Status.OK) {
-                                    throw new IOException(result.getStatus() + " happened during decription");
+                                    throw new IOException(result.getStatus() + " happened during decryption");
                                 }
                                 System.err.println("HTTPS << " + clientString + " -- Consumed: " + result.bytesConsumed());
                                 System.err.println("HTTPS << " + clientString + " -- Produced: " + result.bytesProduced());

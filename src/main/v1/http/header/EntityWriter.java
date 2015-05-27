@@ -4,9 +4,10 @@
  */
 package v1.http.header;
 
+import v1.http.util.constants.ASCII;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import v1.http.util.constants.ASCII;
 
 /**
  *
@@ -27,16 +28,16 @@ public class EntityWriter extends HttpHeaderWriter {
     private static final byte[] LastModified;
     static {
         try {
-            Allow = "allow: ".getBytes("US-ASCII");
-            ContentEncoding = "content-encoding: ".getBytes("US-ASCII");
-            ContentLanguage = "content-language: ".getBytes("US-ASCII");
-            ContentLength = "content-length: ".getBytes("US-ASCII");
-            ContentLocation = "content-location: ".getBytes("US-ASCII");
-            ContentMD5 = "content-md5: ".getBytes("US-ASCII");
-            ContentRange = "content-range: ".getBytes("US-ASCII");
-            ContentType = "content-type: ".getBytes("US-ASCII");
-            ContentExpires = "content-expires: ".getBytes("US-ASCII");
-            LastModified = "last-modified: ".getBytes("US-ASCII");
+            Allow = "allow: ".getBytes(StandardCharsets.US_ASCII);
+            ContentEncoding = "content-encoding: ".getBytes(StandardCharsets.US_ASCII);
+            ContentLanguage = "content-language: ".getBytes(StandardCharsets.US_ASCII);
+            ContentLength = "content-length: ".getBytes(StandardCharsets.US_ASCII);
+            ContentLocation = "content-location: ".getBytes(StandardCharsets.US_ASCII);
+            ContentMD5 = "content-md5: ".getBytes(StandardCharsets.US_ASCII);
+            ContentRange = "content-range: ".getBytes(StandardCharsets.US_ASCII);
+            ContentType = "content-type: ".getBytes(StandardCharsets.US_ASCII);
+            ContentExpires = "content-expires: ".getBytes(StandardCharsets.US_ASCII);
+            LastModified = "last-modified: ".getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

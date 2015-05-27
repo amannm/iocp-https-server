@@ -4,14 +4,10 @@
  */
 package v1.http.header;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.Flushable;
-import java.io.IOException;
-import v1.http.util.constants.HttpStatus;
-import v1.http.util.constants.HttpResponseHeader;
-import v1.http.util.constants.ASCII;
-import java.io.UnsupportedEncodingException;
+import v1.http.util.SimpleCompletionHandler;
+import v1.http.util.constants.*;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
@@ -20,11 +16,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPOutputStream;
-import v1.http.util.SimpleCompletionHandler;
-import v1.http.util.constants.CacheControl;
-import v1.http.util.constants.HttpConnectionHeader;
-import v1.http.util.constants.HttpContentCoding;
-import v1.http.util.constants.HttpStrictTransportSecurityHeader;
 
 /**
  *
@@ -41,7 +32,7 @@ public class HttpResponseWriter implements Flushable, Closeable {
     static {
         httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         try {
-            baseURI = "http://www.ontopad.com".getBytes("US-ASCII");
+            baseURI = "http://www.ontopad.com".getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
@@ -85,7 +76,7 @@ public class HttpResponseWriter implements Flushable, Closeable {
     public void putDate() {
         try {
             source.put(HttpResponseHeader.Date.getBytes()).put(ASCII.Colon).put(ASCII.SP)
-                    .put(httpDateFormat.format(new Date()).getBytes("US-ASCII")).put(ASCII.CRLF);
+                    .put(httpDateFormat.format(new Date()).getBytes(StandardCharsets.US_ASCII)).put(ASCII.CRLF);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

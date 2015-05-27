@@ -4,6 +4,10 @@
  */
 package v2.oauth;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -14,10 +18,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLEngineResult;
-import javax.net.ssl.SSLException;
 
 /**
  *
@@ -60,11 +60,11 @@ public class AsynchronousFacebookAccessTokenRequest {
                         ("POST /oauth/access_token HTTP/1.1\r\n"
                         + "Host: graph.facebook.com\r\n"
                         + "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW\r\n"
-                        + "Content-Type: application/x-www-form-urlencoded; charset=UTF-8\r\n").getBytes("US-ASCII");
+                        + "Content-Type: application/x-www-form-urlencoded; charset=UTF-8\r\n").getBytes(StandardCharsets.US_ASCII);
                 requestBody =
                         ("&grant_type=authorization_code"
                         + "redirect_uri=https%3A%2F%2Fwww.ontopad.com%2Fauthorization%2Ffacebook"
-                        + "&code=").getBytes("US-ASCII");
+                        + "&code=").getBytes(StandardCharsets.US_ASCII);
 
             } catch (UnsupportedEncodingException ex) {
             }

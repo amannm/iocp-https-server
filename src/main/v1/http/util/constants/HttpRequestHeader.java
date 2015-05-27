@@ -5,8 +5,6 @@
 package v1.http.util.constants;
 
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -50,7 +48,7 @@ public enum HttpRequestHeader {
 
     private HttpRequestHeader(final String s) {
         try {
-            this.byteValue = s.getBytes("US-ASCII");
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

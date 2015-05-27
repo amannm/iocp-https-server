@@ -7,8 +7,6 @@ package v1.http.header;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -32,13 +30,13 @@ public class Cookie {
 
     static {
         try {
-            headerStart = "Set-Cookie: ".getBytes("US-ASCII");
-            Expires = "; Expires=".getBytes("US-ASCII");
-            MaxAge = "; Max-Age=".getBytes("US-ASCII");
-            Domain = "; Domain=".getBytes("US-ASCII");
-            Path = "; Path=".getBytes("US-ASCII");
-            Secure = "; Secure".getBytes("US-ASCII");
-            HttpOnly = "; HttpOnly".getBytes("US-ASCII");
+            headerStart = "Set-Cookie: ".getBytes(StandardCharsets.US_ASCII);
+            Expires = "; Expires=".getBytes(StandardCharsets.US_ASCII);
+            MaxAge = "; Max-Age=".getBytes(StandardCharsets.US_ASCII);
+            Domain = "; Domain=".getBytes(StandardCharsets.US_ASCII);
+            Path = "; Path=".getBytes(StandardCharsets.US_ASCII);
+            Secure = "; Secure".getBytes(StandardCharsets.US_ASCII);
+            HttpOnly = "; HttpOnly".getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

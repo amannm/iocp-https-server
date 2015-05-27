@@ -8,7 +8,7 @@ public class CacheControl {
 
     static {
         try {
-            nameBytes = "cache-control".getBytes("US-ASCII");
+            nameBytes = "cache-control".getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
@@ -31,7 +31,7 @@ public class CacheControl {
 
         private RequestDirective(final String s) {
             try {
-                this.byteValue = s.getBytes("US-ASCII");
+                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
             } catch (UnsupportedEncodingException ex) {
                 throw new RuntimeException(ex);
             }
@@ -57,7 +57,7 @@ public class CacheControl {
 
         private ResponseDirective(final String s) {
             try {
-                this.byteValue = s.getBytes("US-ASCII");
+                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
             } catch (UnsupportedEncodingException ex) {
                 throw new RuntimeException(ex);
             }

@@ -4,12 +4,13 @@
  */
 package v1.http.header;
 
+import v1.http.util.constants.ASCII;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import v1.http.util.constants.ASCII;
 
 /**
  *
@@ -24,7 +25,7 @@ public class DateWriter extends HttpHeaderWriter {
     private static final byte[] headerStart;
     static {
         try {
-            headerStart = "cache-control: ".getBytes("US-ASCII");
+            headerStart = "cache-control: ".getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
@@ -39,7 +40,7 @@ public class DateWriter extends HttpHeaderWriter {
     public void write() {
         buffer.put(headerStart);
         try {
-            buffer.put(httpDateFormat.format(new Date()).getBytes("US-ASCII"));
+            buffer.put(httpDateFormat.format(new Date()).getBytes(StandardCharsets.US_ASCII));
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

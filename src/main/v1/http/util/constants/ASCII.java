@@ -288,11 +288,11 @@ public class ASCII {
 
     static {
         try {
-            HourInSeconds = "3600".getBytes("US-ASCII");
-            DayInSeconds = "86400".getBytes("US-ASCII");
-            WeekInSeconds = "604800".getBytes("US-ASCII");
-            MonthInSeconds = "2592000".getBytes("US-ASCII");
-            YearInSeconds = "31536000".getBytes("US-ASCII");
+            HourInSeconds = "3600".getBytes(StandardCharsets.US_ASCII);
+            DayInSeconds = "86400".getBytes(StandardCharsets.US_ASCII);
+            WeekInSeconds = "604800".getBytes(StandardCharsets.US_ASCII);
+            MonthInSeconds = "2592000".getBytes(StandardCharsets.US_ASCII);
+            YearInSeconds = "31536000".getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

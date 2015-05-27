@@ -1,3 +1,4 @@
+import http.util.ResponseBuilder;
 import v2.parse.RawRequestLine;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class HttpServer implements Runnable {
                     ByteBuffer in = ByteBuffer.allocateDirect(4096);
                     Future<Integer> future = socketChannel.read(in);
                     if (future.get(3, TimeUnit.SECONDS) > 0) {
-                        System.err.println("HTTP >> Request recieved");
+                        System.err.println("HTTP >> Request received");
                         in.flip();
                         RawRequestLine line = new RawRequestLine(in);
                         ByteBuffer bb = ByteBuffer.allocateDirect(1024);
@@ -50,7 +51,7 @@ public class HttpServer implements Runnable {
                         future = socketChannel.write(bb);
                         future.get(3, TimeUnit.SECONDS);
                     } else {
-                        System.err.println("HTTP >> Empty request recieved");
+                        System.err.println("HTTP >> Empty request received");
                     }
                 } catch (TimeoutException ex) {
                     System.err.println("HTTP >> Client timed out: " + ex.getMessage());

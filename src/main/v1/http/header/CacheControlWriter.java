@@ -4,15 +4,15 @@
  */
 package v1.http.header;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import v1.http.util.constants.ASCII;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+
 /**
- *
  * @author Administrator
  */
-public abstract class CacheControlWriter extends HttpHeaderWriter{
+public abstract class CacheControlWriter extends HttpHeaderWriter {
 
     private static final byte[] HeaderStart;
     private static final byte[] Public;
@@ -29,31 +29,26 @@ public abstract class CacheControlWriter extends HttpHeaderWriter{
     private static final byte[] OnlyIfCached;
 
     static {
-        try {
-            HeaderStart = "cache-control: ".getBytes("US-ASCII");
+        HeaderStart = "cache-control: ".getBytes(StandardCharsets.US_ASCII);
 
-            MaxAge = "max-age=".getBytes("US-ASCII");
-            SharedMaxAge = "s-maxage=".getBytes("US-ASCII");
+        MaxAge = "max-age=".getBytes(StandardCharsets.US_ASCII);
+        SharedMaxAge = "s-maxage=".getBytes(StandardCharsets.US_ASCII);
 
-            MustRevalidate = "must-revalidate".getBytes("US-ASCII");
-            ProxyRevalidate = "proxy-revalidate".getBytes("US-ASCII");
+        MustRevalidate = "must-revalidate".getBytes(StandardCharsets.US_ASCII);
+        ProxyRevalidate = "proxy-revalidate".getBytes(StandardCharsets.US_ASCII);
 
-            MaxStale = "max-stale".getBytes("US-ASCII");
-            MinFresh = "min-fresh=".getBytes("US-ASCII");
-            OnlyIfCached = "only-if-cached".getBytes("US-ASCII");
+        MaxStale = "max-stale".getBytes(StandardCharsets.US_ASCII);
+        MinFresh = "min-fresh=".getBytes(StandardCharsets.US_ASCII);
+        OnlyIfCached = "only-if-cached".getBytes(StandardCharsets.US_ASCII);
 
-            Public = "public".getBytes("US-ASCII");
-            Private = "private".getBytes("US-ASCII");
+        Public = "public".getBytes(StandardCharsets.US_ASCII);
+        Private = "private".getBytes(StandardCharsets.US_ASCII);
 
-            NoCache = "no-cache".getBytes("US-ASCII");
-            NoStore = "no-store".getBytes("US-ASCII");
-            NoTransform = "no-transform".getBytes("US-ASCII");
-
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        NoCache = "no-cache".getBytes(StandardCharsets.US_ASCII);
+        NoStore = "no-store".getBytes(StandardCharsets.US_ASCII);
+        NoTransform = "no-transform".getBytes(StandardCharsets.US_ASCII);
     }
-    
+
     public CacheControlWriter(ByteBuffer buffer) {
         super(buffer);
     }

@@ -21,7 +21,7 @@ public enum HttpContentCoding {
 
     private HttpContentCoding(final String s) {
         try {
-            this.byteValue = s.getBytes("US-ASCII");
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

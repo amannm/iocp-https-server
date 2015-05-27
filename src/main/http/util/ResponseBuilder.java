@@ -1,4 +1,4 @@
-/*
+package http.util;/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -6,11 +6,10 @@
 import v2.parse.ASCII;
 import v2.parse.HttpDate;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
- *
  * @author admin
  */
 public class ResponseBuilder {
@@ -21,14 +20,10 @@ public class ResponseBuilder {
     private static byte[] httpsSiteURI;
 
     static {
-        try {
-            httpsSiteURI = "https://www.ontopad.com".getBytes("US-ASCII");
-            defaultContentType = "text/html; charset=UTF-8".getBytes("US-ASCII");
-            defaultConnection = "close".getBytes("US-ASCII");
-            defaultConnection = "keep-alive".getBytes("US-ASCII");
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace(System.err);
-        }
+        httpsSiteURI = "https://www.test.com".getBytes(StandardCharsets.US_ASCII);
+        defaultContentType = "text/html; charset=UTF-8".getBytes(StandardCharsets.US_ASCII);
+        defaultConnection = "close".getBytes(StandardCharsets.US_ASCII);
+        defaultConnection = "keep-alive".getBytes(StandardCharsets.US_ASCII);
     }
 
     public ResponseBuilder(final ByteBuffer source) {
@@ -61,11 +56,7 @@ public class ResponseBuilder {
     }
 
     public void build(byte[] content) {
-        try {
-            source.put(HttpResponseHeader.content_length).put(ASCII.Colon).put(ASCII.SP).put(String.valueOf(content.length).getBytes("US-ASCII")).put(ASCII.CRLF);
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace(System.err);
-        }
+        source.put(HttpResponseHeader.content_length).put(ASCII.Colon).put(ASCII.SP).put(String.valueOf(content.length).getBytes(StandardCharsets.US_ASCII)).put(ASCII.CRLF);
         source.put(ASCII.CRLF);
         source.put(content);
         source.flip();
