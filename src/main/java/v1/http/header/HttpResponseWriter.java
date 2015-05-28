@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -31,12 +32,7 @@ public class HttpResponseWriter implements Flushable, Closeable {
 
     static {
         httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        try {
-            baseURI = "http://www.ontopad.com".getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
-
+        baseURI = "http://www.ontopad.com".getBytes(StandardCharsets.US_ASCII);
     }
 
     public HttpResponseWriter(final AsynchronousSocketChannel channel, final ByteBuffer source) {
@@ -74,12 +70,7 @@ public class HttpResponseWriter implements Flushable, Closeable {
     }
 
     public void putDate() {
-        try {
-            source.put(HttpResponseHeader.Date.getBytes()).put(ASCII.Colon).put(ASCII.SP)
-                    .put(httpDateFormat.format(new Date()).getBytes(StandardCharsets.US_ASCII)).put(ASCII.CRLF);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        source.put(HttpResponseHeader.Date.getBytes()).put(ASCII.Colon).put(ASCII.SP).put(httpDateFormat.format(new Date()).getBytes(StandardCharsets.US_ASCII)).put(ASCII.CRLF);
     }
 
     public void putContentEncoding(HttpContentCoding encoding) {

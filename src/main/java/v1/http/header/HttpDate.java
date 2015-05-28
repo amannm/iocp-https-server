@@ -4,8 +4,8 @@
  */
 package v1.http.header;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 
 /**
@@ -25,11 +25,7 @@ public class HttpDate {
         private final byte[] byteValue;
 
         private TimeZone(String s) {
-            try {
-                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         }
 
         public byte[] getBytes() {
@@ -49,11 +45,7 @@ public class HttpDate {
         private final byte[] byteValue;
 
         private Weekday(String s) {
-            try {
-                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         }
 
         public byte[] getBytes() {
@@ -78,11 +70,7 @@ public class HttpDate {
         private final byte[] byteValue;
 
         private Month(String s) {
-            try {
-                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         }
 
         public byte[] getBytes() {

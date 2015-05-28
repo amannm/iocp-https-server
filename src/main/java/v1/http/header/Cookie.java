@@ -4,8 +4,8 @@
  */
 package v1.http.header;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
@@ -29,17 +29,13 @@ public class Cookie {
     private static final byte[] HttpOnly;
 
     static {
-        try {
-            headerStart = "Set-Cookie: ".getBytes(StandardCharsets.US_ASCII);
-            Expires = "; Expires=".getBytes(StandardCharsets.US_ASCII);
-            MaxAge = "; Max-Age=".getBytes(StandardCharsets.US_ASCII);
-            Domain = "; Domain=".getBytes(StandardCharsets.US_ASCII);
-            Path = "; Path=".getBytes(StandardCharsets.US_ASCII);
-            Secure = "; Secure".getBytes(StandardCharsets.US_ASCII);
-            HttpOnly = "; HttpOnly".getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        headerStart = "Set-Cookie: ".getBytes(StandardCharsets.US_ASCII);
+        Expires = "; Expires=".getBytes(StandardCharsets.US_ASCII);
+        MaxAge = "; Max-Age=".getBytes(StandardCharsets.US_ASCII);
+        Domain = "; Domain=".getBytes(StandardCharsets.US_ASCII);
+        Path = "; Path=".getBytes(StandardCharsets.US_ASCII);
+        Secure = "; Secure".getBytes(StandardCharsets.US_ASCII);
+        HttpOnly = "; HttpOnly".getBytes(StandardCharsets.US_ASCII);
     }
 
 //    public void putExpires(Calendar date) {

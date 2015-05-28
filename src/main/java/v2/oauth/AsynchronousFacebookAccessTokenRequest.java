@@ -9,11 +9,11 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -55,19 +55,15 @@ public class AsynchronousFacebookAccessTokenRequest {
 //&redirect_uri=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter.php%3Fversion%3D17%23cb%3Dffeb7f2d%26origin%3Dhttp%253A%252F%252Fwww.quora.com%252Ff345a3dde4%26domain%3Dwww.quora.com%26relation%3Dopener%26frame%3Df3b282ebd&origin=1
 //&response_type=token%2Csigned_request
         static {
-            try {
-                requestHead =
-                        ("POST /oauth/access_token HTTP/1.1\r\n"
-                        + "Host: graph.facebook.com\r\n"
-                        + "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW\r\n"
-                        + "Content-Type: application/x-www-form-urlencoded; charset=UTF-8\r\n").getBytes(StandardCharsets.US_ASCII);
-                requestBody =
-                        ("&grant_type=authorization_code"
-                        + "redirect_uri=https%3A%2F%2Fwww.ontopad.com%2Fauthorization%2Ffacebook"
-                        + "&code=").getBytes(StandardCharsets.US_ASCII);
-
-            } catch (UnsupportedEncodingException ex) {
-            }
+            requestHead =
+                    ("POST /oauth/access_token HTTP/1.1\r\n"
+                            + "Host: graph.facebook.com\r\n"
+                            + "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW\r\n"
+                            + "Content-Type: application/x-www-form-urlencoded; charset=UTF-8\r\n").getBytes(StandardCharsets.US_ASCII);
+            requestBody =
+                    ("&grant_type=authorization_code"
+                            + "redirect_uri=https%3A%2F%2Fwww.ontopad.com%2Fauthorization%2Ffacebook"
+                            + "&code=").getBytes(StandardCharsets.US_ASCII);
         }
 
         public HttpsServer(AsynchronousChannelGroup pool, int port, SSLEngine engine) {
