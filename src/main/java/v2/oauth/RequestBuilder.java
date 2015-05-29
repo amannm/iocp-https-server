@@ -8,6 +8,7 @@ import v2.parse.ASCII;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -26,14 +27,10 @@ public class RequestBuilder {
     private static byte[] basicAuthorizationToken;
 
     static {
-        try {
-            protocol = "HTTP/1.1".getBytes(StandardCharsets.US_ASCII);
-            bearerAuthorization = "Bearer ".getBytes(StandardCharsets.US_ASCII);
-            basicAuthorization =  "Basic ".getBytes(StandardCharsets.US_ASCII);
-            basicAuthorizationToken = "fka0w94fkw049fkaw09fkwa049f".getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace(System.err);
-        }
+        protocol = "HTTP/1.1".getBytes(StandardCharsets.US_ASCII);
+        bearerAuthorization = "Bearer ".getBytes(StandardCharsets.US_ASCII);
+        basicAuthorization =  "Basic ".getBytes(StandardCharsets.US_ASCII);
+        basicAuthorizationToken = "fka0w94fkw049fkaw09fkwa049f".getBytes(StandardCharsets.US_ASCII);
     }
 
     public RequestBuilder(byte[] method, byte[] host, byte[] path) {

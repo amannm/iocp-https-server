@@ -1,17 +1,13 @@
 package v1.http.util.constants;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class CacheControl {
 
     private static final byte[] nameBytes;
 
     static {
-        try {
-            nameBytes = "cache-control".getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        nameBytes = "cache-control".getBytes(StandardCharsets.US_ASCII);
     }
 
     public static byte[] getNameBytes() {
@@ -30,11 +26,7 @@ public class CacheControl {
         private final byte[] byteValue;
 
         private RequestDirective(final String s) {
-            try {
-                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         }
 
         public byte[] getBytes() {
@@ -56,11 +48,7 @@ public class CacheControl {
         private final byte[] byteValue;
 
         private ResponseDirective(final String s) {
-            try {
-                this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
         }
 
         public byte[] getBytes() {

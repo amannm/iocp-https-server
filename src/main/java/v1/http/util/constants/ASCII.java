@@ -4,7 +4,7 @@
  */
 package v1.http.util.constants;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /*
  OCTET          = <any 8-bit sequence of data>
@@ -287,15 +287,10 @@ public class ASCII {
     }
 
     static {
-        try {
-            HourInSeconds = "3600".getBytes(StandardCharsets.US_ASCII);
-            DayInSeconds = "86400".getBytes(StandardCharsets.US_ASCII);
-            WeekInSeconds = "604800".getBytes(StandardCharsets.US_ASCII);
-            MonthInSeconds = "2592000".getBytes(StandardCharsets.US_ASCII);
-            YearInSeconds = "31536000".getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
-
+        HourInSeconds = "3600".getBytes(StandardCharsets.US_ASCII);
+        DayInSeconds = "86400".getBytes(StandardCharsets.US_ASCII);
+        WeekInSeconds = "604800".getBytes(StandardCharsets.US_ASCII);
+        MonthInSeconds = "2592000".getBytes(StandardCharsets.US_ASCII);
+        YearInSeconds = "31536000".getBytes(StandardCharsets.US_ASCII);
     }
 }

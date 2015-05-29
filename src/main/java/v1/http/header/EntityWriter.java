@@ -6,8 +6,8 @@ package v1.http.header;
 
 import v1.http.util.constants.ASCII;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -27,20 +27,16 @@ public class EntityWriter extends HttpHeaderWriter {
     private static final byte[] ContentExpires;
     private static final byte[] LastModified;
     static {
-        try {
-            Allow = "allow: ".getBytes(StandardCharsets.US_ASCII);
-            ContentEncoding = "content-encoding: ".getBytes(StandardCharsets.US_ASCII);
-            ContentLanguage = "content-language: ".getBytes(StandardCharsets.US_ASCII);
-            ContentLength = "content-length: ".getBytes(StandardCharsets.US_ASCII);
-            ContentLocation = "content-location: ".getBytes(StandardCharsets.US_ASCII);
-            ContentMD5 = "content-md5: ".getBytes(StandardCharsets.US_ASCII);
-            ContentRange = "content-range: ".getBytes(StandardCharsets.US_ASCII);
-            ContentType = "content-type: ".getBytes(StandardCharsets.US_ASCII);
-            ContentExpires = "content-expires: ".getBytes(StandardCharsets.US_ASCII);
-            LastModified = "last-modified: ".getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        Allow = "allow: ".getBytes(StandardCharsets.US_ASCII);
+        ContentEncoding = "content-encoding: ".getBytes(StandardCharsets.US_ASCII);
+        ContentLanguage = "content-language: ".getBytes(StandardCharsets.US_ASCII);
+        ContentLength = "content-length: ".getBytes(StandardCharsets.US_ASCII);
+        ContentLocation = "content-location: ".getBytes(StandardCharsets.US_ASCII);
+        ContentMD5 = "content-md5: ".getBytes(StandardCharsets.US_ASCII);
+        ContentRange = "content-range: ".getBytes(StandardCharsets.US_ASCII);
+        ContentType = "content-type: ".getBytes(StandardCharsets.US_ASCII);
+        ContentExpires = "content-expires: ".getBytes(StandardCharsets.US_ASCII);
+        LastModified = "last-modified: ".getBytes(StandardCharsets.US_ASCII);
     }
 
     protected EntityWriter(ByteBuffer buffer) {

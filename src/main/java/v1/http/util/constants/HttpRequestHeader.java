@@ -4,7 +4,7 @@
  */
 package v1.http.util.constants;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -47,11 +47,7 @@ public enum HttpRequestHeader {
     private final byte[] byteValue;
 
     private HttpRequestHeader(final String s) {
-        try {
-            this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        this.byteValue = s.getBytes(StandardCharsets.US_ASCII);
     }
 
     public byte[] getBytes() {
