@@ -91,18 +91,17 @@ public class RawRequestLine {
         Map<byte[], ByteBuffer> map = new HashMap<>();
         do {
             ByteBuffer fieldName = source.duplicate();
-
             while (source.hasRemaining()) {
                 byte ch = source.get();
                 if (ch >= 97) {
                     if (ch <= 122) {
                         //lowercase letter
                         //frequency(1st) the majority of characters in a field name by far
-                        
                     } else {
                         if (ch == 126 || ch == 124) {
                             //tilde, bar
-                            //who the hell would use these?)
+                        } else {
+                            return null;
                         }
                     }
                 } else {
@@ -112,73 +111,63 @@ public class RawRequestLine {
                             //frequency(2nd) Most clients capitalize the first letter of every field name as well as the first letter that follows any internal hyphens
                             source.put(source.position() - 1, (byte) (ch | 0b00010000));
                         } else {
-                            if (ch == 58) {
-                                //colon
-                                //frequency(3rd) Always at least one in each header line
-                                fieldName.limit(source.position() - 1);
-                                break;
+                            if (ch >= 94) {
+                                //underscore, carat, grave
                             } else {
-                                if (ch == 45) {
-                                    //hyphen
-                                    //frequency(4th)
-                                    //used in some commonly occuring headers but rarely used more than once per header 
+                                return null;
+                            }
+                        }
+                    } else {
+                        if (ch == 58) {
+                            //colon
+                            //frequency(3rd) Always at least one in each header line
+                            fieldName.limit(source.position() - 1);
+                            break;
+                        } else {
+                            if (ch == 45) {
+                                //hyphen
+                                //frequency(4th)
+                                //used in some commonly occurring headers but rarely used more than once per header
+                            } else {
+                                if (ch == 13) {
+                                    if (source.hasRemaining() && source.get() == 10) {
+                                        //CRLF (after CRLF or LF)
+                                        //frequency(5th) must occur once per message
+                                        return map;
+                                    } else {
+                                        //cant use CR by itself here
+                                        return null;
+                                    }
                                 } else {
-                                    if (ch == 13) {
-                                        if (source.hasRemaining() && source.get() == 10) {
-                                            //CRLF (after CRLF or LF)
-                                            //frequency(5th) must occur once per message
-                                            return map;
+                                    if (ch >= 48) {
+                                        if (ch <= 57) {
+                                            //digits
+                                            //frequency(6th) used in some obscure non-standard headers like Cookies2:
                                         } else {
                                             return null;
-                                            //cant use CR by itself here
                                         }
                                     } else {
-                                        //
-                                        // ~ The Obscurity Zone ~
-                                        //
-                                        if (ch >= 48) {
-                                            if (ch <= 57) {
-                                                //digits
-                                                //frequency(6th) used in some obscure non-standard headers like Cookies2:
-                                            } else {
-                                                //
-                                                //valid but obscure characters above 57
-                                                //
-                                                if (ch >= 94) {
-                                                    //underscore, carat, grave
-                                                    //Note: 97 and above already handled
-                                                } else {
-                                                    return null;
-                                                    //not a token
-                                                }
-                                            }
+                                        //characters below 48
+                                        if (ch == 10) {
+                                            //LF (after CRLF or LF)
+                                            //frequency(6th) probably like 99% clients use CRLF properly
+                                            return map;
                                         } else {
-                                            //
-                                            //valid, but obscure characters below 48 (not hyphen)
-                                            //
-                                            if (ch == 10) {
-                                                //LF (after CRLF or LF)
-                                                //frequency(6th) probably like 99% clients use CRLF properly
-                                                return map;
-                                            } else {
-                                                if (ch >= 35) {
-                                                    if (ch <= 39) {
-                                                        //number sign, dollar sign, percent, ampersand, singlequote
-                                                    } else {
-                                                        if (ch == 46 || ch == 43 || ch == 42) {
-                                                            //period, plus, asterisk
-                                                        } else {
-                                                            //not a token
-                                                            return null;
-                                                        }
-                                                    }
+                                            if (ch >= 35) {
+                                                if (ch <= 39) {
+                                                    //number sign, dollar sign, percent, ampersand, singlequote
                                                 } else {
-                                                    if (ch == 33) {
-                                                        //exclamation point (heh)
+                                                    if (ch == 46 || ch == 43 || ch == 42) {
+                                                        //period, plus, asterisk
                                                     } else {
-                                                        //not a token
                                                         return null;
                                                     }
+                                                }
+                                            } else {
+                                                if (ch == 33) {
+                                                    //exclamation point (heh)
+                                                } else {
+                                                    return null;
                                                 }
                                             }
                                         }
