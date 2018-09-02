@@ -17,46 +17,53 @@ public class ResponseBuilder {
     private final ByteBuffer source;
     private static byte[] defaultContentType;
     private static byte[] defaultConnection;
-    private static byte[] httpsSiteURI;
 
     static {
-        httpsSiteURI = "https://localhost".getBytes(StandardCharsets.US_ASCII);
         defaultContentType = "text/html; charset=UTF-8".getBytes(StandardCharsets.US_ASCII);
         defaultConnection = "close".getBytes(StandardCharsets.US_ASCII);
         defaultConnection = "keep-alive".getBytes(StandardCharsets.US_ASCII);
     }
 
-    public ResponseBuilder(final ByteBuffer source) {
+    private ResponseBuilder(final ByteBuffer source) {
         this.source = source;
     }
 
-    public void setStatus(int status) {
+    public static ResponseBuilder create(ByteBuffer source) {
+        return new ResponseBuilder(source);
+    }
+
+    public ResponseBuilder setStatus(int status) {
         source.put(HttpStatus.status[status]);
+        return this;
     }
 
-    public void putHTTPSRedirect(ByteBuffer path) {
-        source.put(HttpResponseHeader.location).put(ASCII.Colon).put(ASCII.SP).put(httpsSiteURI).put(path).put(ASCII.CRLF);
+    public ResponseBuilder withRedirect(String host, ByteBuffer path) {
+        source.put(HttpResponseHeader.location).put(host.getBytes(StandardCharsets.US_ASCII)).put(path).put(ASCII.CRLF);
+        return this;
     }
 
-    public void putConnectionClose() {
-        source.put(HttpResponseHeader.connection).put(ASCII.Colon).put(ASCII.SP).put(defaultConnection).put(ASCII.CRLF);
+    public ResponseBuilder withConnectionClose() {
+        source.put(HttpResponseHeader.connection).put(defaultConnection).put(ASCII.CRLF);
+        return this;
     }
 
-    public void putConnectionKeepAlive() {
-        source.put(HttpResponseHeader.connection).put(ASCII.Colon).put(ASCII.SP).put(defaultConnection).put(ASCII.CRLF);
+    public ResponseBuilder withConnectionKeepAlive() {
+        source.put(HttpResponseHeader.connection).put(defaultConnection).put(ASCII.CRLF);
+        return this;
     }
 
-    public void putDefaultContentType() {
-        source.put(HttpResponseHeader.content_type).put(ASCII.Colon).put(ASCII.SP).put(defaultContentType).put(ASCII.CRLF);
-
+    public ResponseBuilder withDefaultContentType() {
+        source.put(HttpResponseHeader.content_type).put(defaultContentType).put(ASCII.CRLF);
+        return this;
     }
 
-    public void putDate() {
-        source.put(HttpResponseHeader.date).put(ASCII.Colon).put(ASCII.SP).put(HttpDate.getDateBytes()).put(ASCII.CRLF);
+    public ResponseBuilder withDate() {
+        source.put(HttpResponseHeader.date).put(HttpDate.getDateBytes()).put(ASCII.CRLF);
+        return this;
     }
 
     public void build(byte[] content) {
-        source.put(HttpResponseHeader.content_length).put(ASCII.Colon).put(ASCII.SP).put(String.valueOf(content.length).getBytes(StandardCharsets.US_ASCII)).put(ASCII.CRLF);
+        source.put(HttpResponseHeader.content_length).put(String.valueOf(content.length).getBytes(StandardCharsets.US_ASCII)).put(ASCII.CRLF);
         source.put(ASCII.CRLF);
         source.put(content);
         source.flip();

@@ -1,27 +1,54 @@
 package systems.cauldron.http;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 
+    private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
-    public static ExecutorService exe;
-    public static AsynchronousChannelGroup group;
+    private static ExecutorService exe;
+    private static AsynchronousChannelGroup group;
 
     static {
         exe = Executors.newFixedThreadPool(4);
-    }
-
-    public static void main(String[] args) {
         try {
             group = AsynchronousChannelGroup.withThreadPool(exe);
-            exe.execute(new HttpServer(group, 8080, "<!doctype html><html><head><title>Hello World</title></head><body></body></html>"));
-            exe.execute(new HttpsServer(group, 1234, "<!doctype html><html><head><title>Hello World</title></head><body></body></html>"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        exe.execute(() -> run(8080, new HttpHandler("https://localhost:8181")));
+        exe.execute(() -> run(8181, new HttpsHandler("<!doctype html><html><head><title>Hello World</title></head><body>Hey</body></html>")));
+    }
+
+    private static void run(int port, Consumer<AsynchronousSocketChannel> handler) {
+        LOG.info("starting TCP/IP listener on local port " + port);
+        try (final AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open(group)) {
+            server.bind(new InetSocketAddress(port));
+            while (true) {
+                Future<AsynchronousSocketChannel> futureChannel = server.accept();
+                try (final AsynchronousSocketChannel channel = futureChannel.get()) {
+                    LOG.info(channel.getLocalAddress() + " << new connection: " + channel.getRemoteAddress());
+                    handler.accept(channel);
+                } catch (Exception ex) {
+                    LOG.log(Level.SEVERE, "channel encountered exception", ex);
+                }
+            }
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            LOG.log(Level.SEVERE, "server encountered exception", ex);
         }
     }
 
