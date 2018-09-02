@@ -12,9 +12,9 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Main {
+public class Server {
 
-    private static final Logger LOG = Logger.getLogger(Main.class.getName());
+    private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     private static ExecutorService exe;
     private static AsynchronousChannelGroup group;
@@ -29,9 +29,9 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
-        exe.execute(() -> run(8080, new HttpHandler("https://localhost:8181")));
-        exe.execute(() -> run(8181, new HttpsHandler("<!doctype html><html><head><title>Hello World</title></head><body>Hey</body></html>")));
+    public static void start() {
+        exe.execute(() -> run(8080, new HttpRedirectHandler("https://localhost:8181")));
+        exe.execute(() -> run(8181, new HttpsHtmlHandler("<!doctype html><html><head><title>Hello World</title></head><body>Hey</body></html>")));
     }
 
     private static void run(int port, Consumer<AsynchronousSocketChannel> handler) {

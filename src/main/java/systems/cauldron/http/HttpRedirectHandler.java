@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 /**
  * Created by Amann on 5/27/2015.
  */
-public class HttpHandler implements Consumer<AsynchronousSocketChannel> {
+public class HttpRedirectHandler implements Consumer<AsynchronousSocketChannel> {
 
-    private static final Logger LOG = Logger.getLogger(HttpsHandler.class.getName());
+    private static final Logger LOG = Logger.getLogger(HttpsHtmlHandler.class.getName());
 
     private final String redirectHost;
 
-    public HttpHandler(String redirectHost) {
+    public HttpRedirectHandler(String redirectHost) {
         this.redirectHost = redirectHost;
     }
 

@@ -14,20 +14,20 @@ import java.util.logging.Logger;
  * Created by Amann on 5/27/2015.
  */
 
-public class HttpsHandler implements Consumer<AsynchronousSocketChannel> {
+public class HttpsHtmlHandler implements Consumer<AsynchronousSocketChannel> {
 
-    private static final Logger LOG = Logger.getLogger(HttpsHandler.class.getName());
+    private static final Logger LOG = Logger.getLogger(HttpsHtmlHandler.class.getName());
 
     private final byte[] html;
 
-    public HttpsHandler(String html) {
+    public HttpsHtmlHandler(String html) {
         this.html = html.getBytes(StandardCharsets.US_ASCII);
     }
 
     @Override
     public void accept(AsynchronousSocketChannel channel) {
         try {
-            SslProcessor processor = new SslProcessor(channel);
+            SslGateway processor = new SslGateway(channel);
             if (processor.receive()) {
                 ByteBuffer buffer = processor.getBuffer();
                 RawRequestLine rrl = new RawRequestLine(buffer);

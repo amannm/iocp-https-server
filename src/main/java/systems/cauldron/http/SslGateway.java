@@ -18,9 +18,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SslProcessor implements Closeable {
+public class SslGateway implements Closeable {
 
-    private static final Logger LOG = Logger.getLogger(SslProcessor.class.getName());
+    private static final Logger LOG = Logger.getLogger(SslGateway.class.getName());
 
     private static SSLContext sslContext;
 
@@ -50,7 +50,7 @@ public class SslProcessor implements Closeable {
     private final ByteBuffer net = ByteBuffer.allocateDirect(32768);
     private final ByteBuffer app = ByteBuffer.allocateDirect(32768);
 
-    public SslProcessor(AsynchronousSocketChannel channel) throws InterruptedException, ExecutionException, TimeoutException, SSLException {
+    public SslGateway(AsynchronousSocketChannel channel) throws InterruptedException, ExecutionException, TimeoutException, SSLException {
         this.channel = channel;
         this.engine = sslContext.createSSLEngine();
         engine.setUseClientMode(false);
