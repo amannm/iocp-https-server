@@ -4,6 +4,7 @@ package systems.cauldron.http.v2.parse;/*
  */
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,7 +109,7 @@ public class RawRequestLine {
                         if (ch <= 90) {
                             //uppercase letter
                             //frequency(2nd) Most clients capitalize the first letter of every field name as well as the first letter that follows any internal hyphens
-                            source.put(source.position() - 1, (byte) (ch | 0b00010000));
+                            source.put(source.position() - 1, (byte) Character.toLowerCase(ch));
                         } else {
                             if (ch >= 94) {
                                 //underscore, carat, grave
@@ -205,5 +206,16 @@ public class RawRequestLine {
             }
         } while (source.hasRemaining());
         return map;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("  [").append(StandardCharsets.US_ASCII.decode(getMethod())).append("]-").append("[").append(StandardCharsets.US_ASCII.decode(getPath())).append("]-").append("[").append(StandardCharsets.US_ASCII.decode(getProtocol())).append("]\n");
+        Map<byte[], ByteBuffer> headers = parseHeaders();
+        for (Map.Entry<byte[], ByteBuffer> entry : headers.entrySet()) {
+            builder.append("  [").append(new String(entry.getKey(), StandardCharsets.US_ASCII)).append("]->").append("[").append(StandardCharsets.US_ASCII.decode(entry.getValue())).append("]\n");
+        }
+        return builder.toString();
     }
 }
