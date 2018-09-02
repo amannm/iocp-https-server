@@ -86,7 +86,7 @@ public class SslGateway implements Closeable {
 
     public boolean transmit() throws SSLException, InterruptedException, ExecutionException, TimeoutException {
 
-        if (app.remaining() == 0) {
+        if (!app.hasRemaining()) {
             return false;
         }
 

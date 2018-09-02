@@ -18,40 +18,33 @@ public class Server {
 
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
-    private static ExecutorService server;
-    private static AsynchronousChannelGroup workers;
+    private ExecutorService handlers;
+    private AsynchronousChannelGroup workers;
+    private CountDownLatch readyLatch;
 
-    static {
-        server = Executors.newFixedThreadPool(2);
+    public Server() {
+        handlers = Executors.newFixedThreadPool(2);
         try {
             workers = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(16));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        readyLatch = new CountDownLatch(2);
     }
 
-    private static CountDownLatch readyLatch;
 
-    public static void main(String... args) throws InterruptedException {
-        readyLatch = new CountDownLatch(2);
-        server.execute(() -> run(8080, new HttpRedirectHandler("https://localhost:8181")));
-        server.execute(() -> run(8181, new HttpsHtmlHandler("<!doctype html><html><head><title>Hello World</title></head><body>Hey</body></html>")));
+    public void start(String hostname, int httpPort, int httpsPort, String content) throws InterruptedException {
+        handlers.execute(() -> run(httpPort, new HttpRedirectHandler("https://" + hostname + ":" + httpsPort)));
+        handlers.execute(() -> run(httpsPort, new HttpsHtmlHandler(content)));
         readyLatch.await(5L, TimeUnit.SECONDS);
     }
 
-    public static void start(String host, int httpPort, int httpsPort, String content) throws InterruptedException {
-        readyLatch = new CountDownLatch(2);
-        server.execute(() -> run(httpPort, new HttpRedirectHandler("https://" + host + ":" + httpsPort)));
-        server.execute(() -> run(httpsPort, new HttpsHtmlHandler(content)));
-        readyLatch.await(5L, TimeUnit.SECONDS);
-    }
-
-    public static void stop() {
+    public void stop() {
         workers.shutdown();
-        server.shutdown();
+        handlers.shutdown();
     }
 
-    private static void run(int port, Consumer<AsynchronousSocketChannel> handler) {
+    private void run(int port, Consumer<AsynchronousSocketChannel> handler) {
         LOG.info("starting TCP/IP listener on local port " + port);
         try (final AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open(workers)) {
             server.bind(new InetSocketAddress(port));

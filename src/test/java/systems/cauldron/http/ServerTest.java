@@ -29,10 +29,11 @@ public class ServerTest {
         int testHttpPort = 8080;
         int testHttpsPort = 8181;
         String testContent = "<!doctype html><html><head><title>Hello World</title></head><body>Hey</body></html>";
-        Server.start(testHost, testHttpPort, testHttpsPort, testContent);
+        Server server = new Server();
+        server.start(testHost, testHttpPort, testHttpsPort, testContent);
         String content = getHttpContent(testHost, testHttpPort);
         Assert.assertEquals(testContent, content);
-        Server.stop();
+        server.stop();
     }
 
     private static String getHttpsContent(String location) throws IOException, NoSuchAlgorithmException, KeyManagementException {
