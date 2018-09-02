@@ -5,7 +5,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.TrustManagerFactory;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.nio.ByteBuffer;
@@ -34,11 +33,8 @@ public class SslGateway implements Closeable {
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(ksKeys, key2.toCharArray());
 
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init(ksKeys);
-
             sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+            sslContext.init(kmf.getKeyManagers(), null, null);
 
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -52,7 +48,7 @@ public class SslGateway implements Closeable {
 
     public SslGateway(AsynchronousSocketChannel channel) throws InterruptedException, ExecutionException, TimeoutException, SSLException {
         this.channel = channel;
-        this.engine = sslContext.createSSLEngine();
+        this.engine = sslContext.createSSLEngine("localhost", 8181);
         engine.setUseClientMode(false);
         engine.setWantClientAuth(false);
         engine.setEnableSessionCreation(true);
@@ -120,28 +116,32 @@ public class SslGateway implements Closeable {
 
 
     private void handshake(AsynchronousSocketChannel channel) throws InterruptedException, ExecutionException, TimeoutException, SSLException {
+
         engine.beginHandshake();
+
+        net.limit(0);
+
         while (true) {
             switch (engine.getHandshakeStatus()) {
                 case NEED_UNWRAP:
-                    net.clear();
-                    channel.read(net).get(3, TimeUnit.SECONDS);
                     do {
-                        net.flip();
+                        if (!net.hasRemaining()) {
+                            net.clear();
+                            channel.read(net).get(3, TimeUnit.SECONDS);
+                            net.flip();
+                        }
                         SSLEngineResult result = engine.unwrap(net, app);
                         checkHandshakeResult(result);
                         runRemainingTasks(engine);
-                        net.compact();
                     } while (engine.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_UNWRAP);
                     break;
                 case NEED_WRAP:
+                    app.flip();
                     net.clear();
                     do {
-                        app.flip();
                         SSLEngineResult result = engine.wrap(app, net);
                         checkHandshakeResult(result);
                         runRemainingTasks(engine);
-                        app.compact();
                     } while (engine.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_WRAP);
                     net.flip();
                     channel.write(net).get(3, TimeUnit.SECONDS);
