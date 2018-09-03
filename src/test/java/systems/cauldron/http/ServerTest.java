@@ -2,6 +2,8 @@ package systems.cauldron.http;
 
 import org.junit.Assert;
 import org.junit.Test;
+import systems.cauldron.http.handler.HttpRedirectHandler;
+import systems.cauldron.http.handler.HttpsHtmlHandler;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;

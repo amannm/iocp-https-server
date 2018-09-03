@@ -1,4 +1,4 @@
-package systems.cauldron.http;
+package systems.cauldron.http.handler;
 
 import systems.cauldron.http.util.ResponseBuilder;
 import systems.cauldron.http.v2.parse.RawRequestLine;

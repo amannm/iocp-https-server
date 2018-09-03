@@ -1,5 +1,6 @@
-package systems.cauldron.http;
+package systems.cauldron.http.handler;
 
+import systems.cauldron.http.Encryptor;
 import systems.cauldron.http.util.ResponseBuilder;
 import systems.cauldron.http.v2.parse.RawRequestLine;
 
@@ -28,7 +29,7 @@ public class HttpsHtmlHandler implements Consumer<AsynchronousSocketChannel> {
     public void accept(AsynchronousSocketChannel channel) {
         try {
             LOG.info(channel.getLocalAddress() + " << new connection: " + channel.getRemoteAddress());
-            SslGateway processor = new SslGateway(channel);
+            Encryptor processor = new Encryptor(channel);
             if (processor.receive()) {
                 ByteBuffer buffer = processor.getBuffer();
                 RawRequestLine rrl = new RawRequestLine(buffer);
