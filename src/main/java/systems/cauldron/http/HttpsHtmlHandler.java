@@ -27,6 +27,7 @@ public class HttpsHtmlHandler implements Consumer<AsynchronousSocketChannel> {
     @Override
     public void accept(AsynchronousSocketChannel channel) {
         try {
+            LOG.info(channel.getLocalAddress() + " << new connection: " + channel.getRemoteAddress());
             SslGateway processor = new SslGateway(channel);
             if (processor.receive()) {
                 ByteBuffer buffer = processor.getBuffer();
@@ -42,7 +43,8 @@ public class HttpsHtmlHandler implements Consumer<AsynchronousSocketChannel> {
                 processor.transmit();
             }
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "channel encountered exception", ex);
+            LOG.log(Level.SEVERE, "handler encountered exception", ex);
         }
     }
+
 }

@@ -1,66 +1,63 @@
 package systems.cauldron.http;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Server {
 
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
-    private ExecutorService handlers;
+    private ExecutorService listenerPool;
     private AsynchronousChannelGroup workers;
-    private CountDownLatch readyLatch;
+    private Map<Integer, Consumer<AsynchronousSocketChannel>> handlers;
 
-    public Server() {
-        handlers = Executors.newFixedThreadPool(2);
-        try {
-            workers = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(16));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        readyLatch = new CountDownLatch(2);
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        String defaultHostname = "localhost";
+        int defaultHttpPort = 8080;
+        int defaultHttpsPort = 8181;
+        String defaultContent = "<!doctype html><html><head><title>Default Page</title></head><body>Server is running...</body></html>";
+
+        Server defaultServer = new Server();
+        defaultServer.bind(defaultHttpPort, new HttpRedirectHandler("https://" + defaultHostname + ":" + defaultHttpsPort));
+        defaultServer.bind(defaultHttpsPort, new HttpsHtmlHandler(defaultContent));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(defaultServer::stop));
+        defaultServer.start();
+
     }
 
+    public Server() {
+        handlers = new HashMap<>();
+    }
 
-    public void start(String hostname, int httpPort, int httpsPort, String content) throws InterruptedException {
-        handlers.execute(() -> run(httpPort, new HttpRedirectHandler("https://" + hostname + ":" + httpsPort)));
-        handlers.execute(() -> run(httpsPort, new HttpsHtmlHandler(content)));
+    public void bind(int port, Consumer<AsynchronousSocketChannel> handler) {
+        if (handlers.containsKey(port)) {
+            throw new RuntimeException("handler already registered at port " + port);
+        }
+        handlers.put(port, handler);
+    }
+
+    public void start() throws InterruptedException, IOException {
+        workers = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(16));
+        listenerPool = Executors.newFixedThreadPool(handlers.size());
+        CountDownLatch readyLatch = new CountDownLatch(handlers.size());
+        handlers.forEach((port, handler) -> listenerPool.execute(new Listener(workers, readyLatch, port, handler)));
         readyLatch.await(5L, TimeUnit.SECONDS);
     }
 
     public void stop() {
         workers.shutdown();
-        handlers.shutdown();
-    }
-
-    private void run(int port, Consumer<AsynchronousSocketChannel> handler) {
-        LOG.info("starting TCP/IP listener on local port " + port);
-        try (final AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open(workers)) {
-            server.bind(new InetSocketAddress(port));
-            readyLatch.countDown();
-            while (true) {
-                Future<AsynchronousSocketChannel> futureChannel = server.accept();
-                try (final AsynchronousSocketChannel channel = futureChannel.get()) {
-                    LOG.info(channel.getLocalAddress() + " << new connection: " + channel.getRemoteAddress());
-                    handler.accept(channel);
-                } catch (Exception ex) {
-                    LOG.log(Level.SEVERE, "channel encountered exception", ex);
-                }
-            }
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "server encountered exception", ex);
-        }
+        listenerPool.shutdown();
     }
 
 

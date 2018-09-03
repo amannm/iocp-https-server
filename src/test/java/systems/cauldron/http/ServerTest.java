@@ -25,15 +25,22 @@ public class ServerTest {
 
     @Test
     public void canRedirectToHttpsAndServeStaticHtml() throws IOException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
-        String testHost = "localhost";
+        String testHostname = "localhost";
         int testHttpPort = 8080;
         int testHttpsPort = 8181;
         String testContent = "<!doctype html><html><head><title>Hello World</title></head><body>Hey</body></html>";
-        Server server = new Server();
-        server.start(testHost, testHttpPort, testHttpsPort, testContent);
-        String content = getHttpContent(testHost, testHttpPort);
+
+        Server testServer = new Server();
+        testServer.bind(testHttpPort, new HttpRedirectHandler("https://" + testHostname + ":" + testHttpsPort));
+        testServer.bind(testHttpsPort, new HttpsHtmlHandler(testContent));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(testServer::stop));
+        testServer.start();
+
+        String content = getHttpContent(testHostname, testHttpPort);
         Assert.assertEquals(testContent, content);
-        server.stop();
+
+        testServer.stop();
     }
 
     private static String getHttpsContent(String location) throws IOException, NoSuchAlgorithmException, KeyManagementException {
