@@ -21,7 +21,7 @@ public class HttpsHtmlHandler implements Consumer<AsynchronousSocketChannel> {
     private final byte[] html;
 
     public HttpsHtmlHandler(String html) {
-        this.html = html.getBytes(StandardCharsets.US_ASCII);
+        this.html = html.getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
